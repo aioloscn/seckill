@@ -24,11 +24,14 @@ public class UserServiceImpl implements IUserService {
     private UserPasswordDOMapper userPasswordDOMapper;
 
     @Override
-    public UserDO getUserById(Integer id) {
+    public UserModel getUserById(Integer id) {
 
         UserDO userDO = userDOMapper.selectByPrimaryKey(id);
+        if (userDO == null)
+            return null;
 
-        return null;
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
+        return convertFromDataObject(userDO, userPasswordDO);
     }
 
     private UserModel convertFromDataObject(UserDO userDO, UserPasswordDO userPasswordDO) {

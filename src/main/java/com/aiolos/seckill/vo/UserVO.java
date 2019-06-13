@@ -1,19 +1,16 @@
-package com.aiolos.seckill.model;
+package com.aiolos.seckill.vo;
 
 /**
  * @author Aiolos
- * @date 2019-06-12 23:23
+ * @date 2019-06-13 19:42
  */
-public class UserModel {
+public class UserVO {
 
     private Integer id;
     private String name;
     private Byte gender;
     private Integer age;
     private String telphone;
-    private String registerMode;
-    private String thirdPartyId;
-    private String encrptPassword;
 
     public Integer getId() {
         return id;
@@ -53,29 +50,5 @@ public class UserModel {
 
     public void setTelphone(String telphone) {
         this.telphone = telphone;
-    }
-
-    public String getRegisterMode() {
-        return registerMode;
-    }
-
-    public void setRegisterMode(String registerMode) {
-        this.registerMode = registerMode;
-    }
-
-    public String getThirdPartyId() {
-        return thirdPartyId;
-    }
-
-    public void setThirdPartyId(String thirdPartyId) {
-        this.thirdPartyId = thirdPartyId;
-    }
-
-    public String getEncrptPassword() {
-        return encrptPassword;
-    }
-
-    public void setEncrptPassword(String encrptPassword) {
-        this.encrptPassword = encrptPassword;
     }
 }

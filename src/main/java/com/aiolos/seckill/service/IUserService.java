@@ -1,6 +1,6 @@
 package com.aiolos.seckill.service;
 
-import com.aiolos.seckill.dataobject.UserDO;
+import com.aiolos.seckill.model.UserModel;
 
 /**
  * @author Aiolos
@@ -8,5 +8,5 @@ import com.aiolos.seckill.dataobject.UserDO;
  */
 public interface IUserService {
 
-    UserDO getUserById(Integer id);
+    UserModel getUserById(Integer id);
 }
