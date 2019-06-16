@@ -50,4 +50,6 @@ public interface PromoDOMapper {
      * @mbg.generated Tue Jun 04 21:55:07 CST 2019
      */
     int updateByPrimaryKey(PromoDO record);
+
+    PromoDO selectByItemId(Integer itemId);
 }

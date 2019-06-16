@@ -1,5 +1,6 @@
 package com.aiolos.seckill.service;
 
+import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.model.UserModel;
 
 /**
@@ -9,4 +10,8 @@ import com.aiolos.seckill.model.UserModel;
 public interface IUserService {
 
     UserModel getUserById(Integer id);
+
+    void register(UserModel userModel) throws BusinessException;
+
+    UserModel validateLogin(String telphone, String encryptPassword) throws BusinessException;
 }

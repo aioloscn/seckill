@@ -1,5 +1,6 @@
 package com.aiolos.seckill.dao;
 
+import com.aiolos.seckill.dataobject.UserDO;
 import com.aiolos.seckill.dataobject.UserPasswordDO;
 
 public interface UserPasswordDOMapper {

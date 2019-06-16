@@ -1,5 +1,10 @@
 package com.aiolos.seckill.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Aiolos
  * @date 2019-06-12 23:23
@@ -7,13 +12,25 @@ package com.aiolos.seckill.model;
 public class UserModel {
 
     private Integer id;
+
+    @NotBlank(message = "用户名不能为空")
     private String name;
+
+    @NotNull(message = "性别不能为空")
     private Byte gender;
+
+    @NotNull(message = "年龄不能为空")
+    @Min(value = 0, message = "年龄必须大于0")
+    @Max(value = 150, message = "年龄不能大于150")
     private Integer age;
+
+    @NotBlank(message = "手机号不能为空")
     private String telphone;
     private String registerMode;
     private String thirdPartyId;
-    private String encrptPassword;
+
+    @NotBlank(message = "密码不能为空")
+    private String encryptPassword;
 
     public Integer getId() {
         return id;
@@ -71,11 +88,11 @@ public class UserModel {
         this.thirdPartyId = thirdPartyId;
     }
 
-    public String getEncrptPassword() {
-        return encrptPassword;
+    public String getEncryptPassword() {
+        return encryptPassword;
     }
 
-    public void setEncrptPassword(String encrptPassword) {
-        this.encrptPassword = encrptPassword;
+    public void setEncryptPassword(String encryptPassword) {
+        this.encryptPassword = encryptPassword;
     }
 }
