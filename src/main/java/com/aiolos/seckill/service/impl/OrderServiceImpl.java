@@ -14,6 +14,7 @@ import com.aiolos.seckill.service.IOrderService;
 import com.aiolos.seckill.service.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.time.format.DateTimeFormatter;
  * @author Aiolos
  * @date 2019-06-16 20:38
  */
+@Service
 public class OrderServiceImpl implements IOrderService {
 
     @Autowired

@@ -54,5 +54,5 @@ public interface ItemStockDOMapper {
 
     ItemStockDO selectByItemId(Integer id);
 
-    int descreaseStock(@Param("itemId") Integer itemId, @Param("amount") Integer amount);
+    int decreaseStock(@Param("itemId") Integer itemId, @Param("amount") Integer amount);
 }

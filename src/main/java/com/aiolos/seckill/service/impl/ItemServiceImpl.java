@@ -14,6 +14,7 @@ import com.aiolos.seckill.validator.ValidationResult;
 import com.aiolos.seckill.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  * @author Aiolos
  * @date 2019-06-16 17:42
  */
+@Service
 public class ItemServiceImpl implements IItemService {
 
     @Autowired
@@ -96,7 +98,7 @@ public class ItemServiceImpl implements IItemService {
     @Override
     public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
 
-        int affectedRow = itemStockDOMapper.descreaseStock(itemId, amount);
+        int affectedRow = itemStockDOMapper.decreaseStock(itemId, amount);
         if (affectedRow > 0)
             return true;
 

@@ -7,6 +7,7 @@ import com.aiolos.seckill.service.IPromoService;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
  * @author Aiolos
  * @date 2019-06-16 23:08
  */
+@Service
 public class PromoServiceImpl implements IPromoService {
 
     @Autowired

@@ -77,7 +77,7 @@ public class UserController extends BaseController {
                                      @RequestParam("password") String password
         ) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
-        String inSessionOtpCode = (String) this.httpServletRequest.getAttribute(telphone);
+        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
 
         if (!com.alibaba.druid.util.StringUtils.equals(otpCode, inSessionOtpCode)) {
 
@@ -88,6 +88,7 @@ public class UserController extends BaseController {
         userModel.setName(name);
         userModel.setGender(gender.byteValue());
         userModel.setAge(age);
+        userModel.setRegisterMode("byphone");
         userModel.setTelphone(telphone);
         userModel.setEncryptPassword(this.EncodeByMd5(password));
 
@@ -106,6 +107,7 @@ public class UserController extends BaseController {
         return newStr;
     }
 
+    @PostMapping("/login")
     public CommonReturnType login(@RequestParam("telphone") String telphone,
                                   @RequestParam("password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 

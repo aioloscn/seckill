@@ -7,10 +7,7 @@ import com.aiolos.seckill.model.UserModel;
 import com.aiolos.seckill.response.CommonReturnType;
 import com.aiolos.seckill.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +26,7 @@ public class OrderController extends BaseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
+    @PostMapping("/createorder")
     public CommonReturnType createOrder(@RequestParam("itemId") Integer itemId,
                                         @RequestParam(value = "promoId", required = false) Integer promoId,
                                         @RequestParam("amount") Integer amount) throws BusinessException {

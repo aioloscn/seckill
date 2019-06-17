@@ -1,6 +1,7 @@
 package com.aiolos.seckill.validator;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -11,6 +12,7 @@ import java.util.Set;
  * @author Aiolos
  * @date 2019-06-16 14:52
  */
+@Component
 public class ValidatorImpl implements InitializingBean {
 
     private Validator validator;

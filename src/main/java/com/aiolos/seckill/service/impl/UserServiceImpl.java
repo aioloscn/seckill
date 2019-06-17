@@ -67,6 +67,8 @@ public class UserServiceImpl implements IUserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "手机号已被注册");
         }
 
+        userModel.setId(userDO.getId());
+
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
 
@@ -106,7 +108,8 @@ public class UserServiceImpl implements IUserService {
             return null;
 
         UserPasswordDO userPasswordDO = new UserPasswordDO();
-        BeanUtils.copyProperties(userModel, userPasswordDO);
+        userPasswordDO.setEncryptPassword(userModel.getEncryptPassword());
+        userPasswordDO.setUserId(userModel.getId());
         return userPasswordDO;
     }
 

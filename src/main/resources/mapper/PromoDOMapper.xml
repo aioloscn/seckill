@@ -144,7 +144,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByItemId">
+  <select id="selectByItemId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from promo

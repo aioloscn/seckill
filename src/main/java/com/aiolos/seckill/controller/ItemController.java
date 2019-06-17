@@ -46,8 +46,8 @@ public class ItemController extends BaseController {
         return CommonReturnType.create(itemVO);
     }
 
-    @GetMapping("/{id:\\d+}")
-    public CommonReturnType getItem(@PathVariable Integer id) {
+    @GetMapping("/get")
+    public CommonReturnType getItem(@RequestParam("id") Integer id) {
 
         ItemModel itemModel = itemService.getItemById(id);
         ItemVO itemVO = convertVOFromModel(itemModel);
