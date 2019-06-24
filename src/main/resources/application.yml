@@ -10,6 +10,14 @@ spring:
     username: root
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    host: 47.97.125.200
+    port: 6379
+    database: 10
+    jedis:
+      pool:
+        max-active: 50
+        min-idle: 20
 logging:
   level:
     com.aiolos.seckill.dao : debug
