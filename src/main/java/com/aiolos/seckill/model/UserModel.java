@@ -4,12 +4,13 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author Aiolos
  * @date 2019-06-12 23:23
  */
-public class UserModel {
+public class UserModel implements Serializable {
 
     private Integer id;
 
