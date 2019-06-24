@@ -43,7 +43,7 @@
 			$.ajax({
 				type:"POST",
 				contentType:"application/x-www-form-urlencoded",
-				url:"http://localhost:8090/user/getotp",
+				url:"http://"+ g_host +"/user/getotp",
 				data:{
 					"telphone":$("#telphone").val(),
 				},
