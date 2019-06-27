@@ -3,6 +3,7 @@ package com.aiolos.seckill.controller;
 import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.model.ItemModel;
 import com.aiolos.seckill.response.CommonReturnType;
+import com.aiolos.seckill.service.ICacheService;
 import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.vo.ItemVO;
 import org.joda.time.format.DateTimeFormat;
@@ -31,6 +32,9 @@ public class ItemController extends BaseController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private ICacheService cacheService;
+
     @PostMapping("/create")
     public CommonReturnType createItem(@RequestParam("title") String title,
                                        @RequestParam("description") String description,
@@ -54,14 +58,23 @@ public class ItemController extends BaseController {
     @GetMapping("/get")
     public CommonReturnType getItem(@RequestParam("id") Integer id) {
 
-        // 根据商品ID到redis获取数据
-        ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_" + id);
-        if (itemModel == null) {
-            itemModel = itemService.getItemById(id);
+        ItemModel itemModel = null;
 
-            if (itemModel != null) {
-                redisTemplate.opsForValue().set("item_" + id, itemModel);
-                redisTemplate.expire("item_" + id, 10, TimeUnit.MINUTES);
+        // 先取本地缓存
+        itemModel = (ItemModel) cacheService.getFromCommonCache("item_" + id);
+
+        if (itemModel == null) {
+            // 根据商品ID到redis获取数据
+            itemModel = (ItemModel) redisTemplate.opsForValue().get("item_" + id);
+            if (itemModel == null) {
+                itemModel = itemService.getItemById(id);
+
+                if (itemModel != null) {
+                    redisTemplate.opsForValue().set("item_" + id, itemModel);
+                    redisTemplate.expire("item_" + id, 10, TimeUnit.MINUTES);
+
+                    cacheService.setCommonCache("item_" + id, itemModel);
+                }
             }
         }
 
