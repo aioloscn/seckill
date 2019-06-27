@@ -3,13 +3,14 @@ package com.aiolos.seckill.model;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author Aiolos
  * @date 2019-06-16 15:32
  */
-public class ItemModel {
+public class ItemModel implements Serializable {
 
     private Integer id;
 
