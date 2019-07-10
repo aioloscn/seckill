@@ -5,6 +5,7 @@ import com.aiolos.seckill.model.ItemModel;
 import com.aiolos.seckill.response.CommonReturnType;
 import com.aiolos.seckill.service.ICacheService;
 import com.aiolos.seckill.service.IItemService;
+import com.aiolos.seckill.service.IPromoService;
 import com.aiolos.seckill.vo.ItemVO;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +35,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private ICacheService cacheService;
+
+    @Autowired
+    private IPromoService promoService;
 
     @PostMapping("/create")
     public CommonReturnType createItem(@RequestParam("title") String title,
@@ -114,5 +118,12 @@ public class ItemController extends BaseController {
         }
 
         return itemVO;
+    }
+
+    @GetMapping("/publicpromo")
+    public CommonReturnType publishPromo(@RequestParam("id") Integer id) {
+
+        promoService.publishPromo(id);
+        return CommonReturnType.create(null);
     }
 }

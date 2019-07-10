@@ -18,6 +18,13 @@ public interface IItemService {
     ItemModel getItemById(Integer id);
 
     /**
+     * item及promo cache缓存模型
+     * @param id
+     * @return
+     */
+    ItemModel getItemByIdInCache(Integer id);
+
+    /**
      * 库存扣减
      * @param itemId
      * @param amount
