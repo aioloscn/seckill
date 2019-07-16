@@ -21,3 +21,8 @@ spring:
 logging:
   level:
     com.aiolos.seckill.dao : debug
+
+mq:
+  nameserver:
+    addr: 47.97.125.200:9876
+  topicname: stock

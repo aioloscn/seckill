@@ -8,6 +8,7 @@ import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.error.EmBusinessError;
 import com.aiolos.seckill.model.ItemModel;
 import com.aiolos.seckill.model.PromoModel;
+import com.aiolos.seckill.mq.MqProducer;
 import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.service.IPromoService;
 import com.aiolos.seckill.validator.ValidationResult;
@@ -30,6 +31,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ItemServiceImpl implements IItemService {
+
+    @Autowired
+    private MqProducer producer;
 
     @Autowired
     private ValidatorImpl validator;
