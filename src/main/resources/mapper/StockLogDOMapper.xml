@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aiolos.seckill.dao.StockLogDOMapper">
+  <resultMap id="BaseResultMap" type="com.aiolos.seckill.dataobject.StockLogDO">
+    <result column="stock_log_id" jdbcType="VARCHAR" property="stockLogId" />
+    <result column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <insert id="insert" parameterType="com.aiolos.seckill.dataobject.StockLogDO">
+    insert into stock_log (stock_log_id, item_id, amount, 
+      status)
+    values (#{stockLogId,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aiolos.seckill.dataobject.StockLogDO">
+    insert into stock_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockLogId != null">
+        stock_log_id,
+      </if>
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockLogId != null">
+        #{stockLogId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

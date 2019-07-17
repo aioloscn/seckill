@@ -4,7 +4,9 @@ import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.error.EmBusinessError;
 import com.aiolos.seckill.model.OrderModel;
 import com.aiolos.seckill.model.UserModel;
+import com.aiolos.seckill.mq.MqProducer;
 import com.aiolos.seckill.response.CommonReturnType;
+import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.service.IOrderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,12 @@ public class OrderController extends BaseController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private MqProducer mqProducer;
+
+    @Autowired
+    private IItemService itemService;
+
     @PostMapping("/createorder")
     public CommonReturnType createOrder(@RequestParam("itemId") Integer itemId,
                                         @RequestParam(value = "promoId", required = false) Integer promoId,
@@ -53,7 +61,12 @@ public class OrderController extends BaseController {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN, "用户未登陆，不能下单");
         }
 
-        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
+        // 初始化库存流水
+        itemService.initStockLog(itemId, amount);
+
+//        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
+        if (!mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount))
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR, "下单失败");
         return CommonReturnType.create(null);
     }
 }

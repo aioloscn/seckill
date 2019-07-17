@@ -25,6 +25,14 @@ public interface IItemService {
     ItemModel getItemByIdInCache(Integer id);
 
     /**
+     * 回滚库存
+     * @param itemId
+     * @param amount
+     * @return
+     */
+    boolean increaseStock(Integer itemId, Integer amount);
+
+    /**
      * 库存扣减
      * @param itemId
      * @param amount
@@ -34,10 +42,25 @@ public interface IItemService {
     boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException;
 
     /**
+     * 异步扣库存
+     * @param itemId
+     * @param amount
+     * @return
+     */
+    boolean asyncDecreaseStock(Integer itemId, Integer amount);
+
+    /**
      * 商品销量增加
      * @param itemId
      * @param amount
      * @throws BusinessException
      */
     void increaseSales(Integer itemId, Integer amount) throws BusinessException;
+
+    /**
+     * 初始化库存流水
+     * @param itemId
+     * @param amount
+     */
+    String initStockLog(Integer itemId, Integer amount);
 }
