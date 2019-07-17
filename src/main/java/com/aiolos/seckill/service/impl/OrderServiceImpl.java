@@ -44,7 +44,7 @@ public class OrderServiceImpl implements IOrderService {
     private SequenceDOMapper sequenceDOMapper;
 
     @Override
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException {
 
         // 1.检验下单状态，下单的商品是否存在，用户是否合法，购买数量是否正确
         ItemModel itemModel = itemService.getItemByIdInCache(itemId);
@@ -98,6 +98,9 @@ public class OrderServiceImpl implements IOrderService {
 
         // 5.增加商品的销量
         itemService.increaseSales(itemId, amount);
+
+        // 6.设置库存流水状态为成功
+
 
 //        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 //

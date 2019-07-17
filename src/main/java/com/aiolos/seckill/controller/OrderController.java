@@ -62,10 +62,10 @@ public class OrderController extends BaseController {
         }
 
         // 初始化库存流水
-        itemService.initStockLog(itemId, amount);
+        String stockLogId = itemService.initStockLog(itemId, amount);
 
 //        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
-        if (!mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount))
+        if (!mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount, stockLogId))
             throw new BusinessException(EmBusinessError.UNKNOWN_ERROR, "下单失败");
         return CommonReturnType.create(null);
     }

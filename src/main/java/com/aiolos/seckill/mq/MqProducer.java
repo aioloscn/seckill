@@ -61,9 +61,10 @@ public class MqProducer {
                 Integer amount = Integer.parseInt(((Map) o).get("amount").toString());
                 Integer userId = Integer.parseInt(((Map) o).get("userId").toString());
                 Integer promoId = Integer.parseInt(((Map) o).get("promoId").toString());
+                String stockLogId = ((Map) o).get("stockLogId").toString();
 
                 try {
-                    orderService.createOrder(userId, itemId, promoId, amount);
+                    orderService.createOrder(userId, itemId, promoId, amount, stockLogId);
                 } catch (BusinessException e) {
                     e.printStackTrace();
                     return LocalTransactionState.ROLLBACK_MESSAGE;
@@ -90,17 +91,19 @@ public class MqProducer {
      * @param amount
      * @return
      */
-    public boolean transactionAsyncReduceStock(Integer userId, Integer itemId, Integer promoId, Integer amount) {
+    public boolean transactionAsyncReduceStock(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) {
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("itemId", itemId);
         bodyMap.put("amount", amount);
+        bodyMap.put("stockLogId", stockLogId);
 
         Map<String, Object> argsMap = new HashMap<>();
         argsMap.put("itemId", itemId);
         argsMap.put("amount", amount);
         argsMap.put("userId", userId);
         argsMap.put("promoId", promoId);
+        argsMap.put("stockLogId", stockLogId);
 
         Message message = new Message(topicName, "increase", JSON.toJSON(bodyMap).toString().getBytes(Charset.forName("UTF-8")));
         TransactionSendResult sendResult = null;
