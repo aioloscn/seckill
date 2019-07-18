@@ -1,5 +1,7 @@
 package com.aiolos.seckill.mq;
 
+import com.aiolos.seckill.dao.StockLogDOMapper;
+import com.aiolos.seckill.dataobject.StockLogDO;
 import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.service.IOrderService;
 import com.alibaba.fastjson.JSON;
@@ -38,6 +40,9 @@ public class MqProducer {
     @Autowired
     private IOrderService orderService;
 
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
+
     @PostConstruct
     public void init() throws MQClientException {
 
@@ -66,7 +71,11 @@ public class MqProducer {
                 try {
                     orderService.createOrder(userId, itemId, promoId, amount, stockLogId);
                 } catch (BusinessException e) {
+
                     e.printStackTrace();
+                    StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+                    stockLogDO.setStatus(3);
+                    stockLogDOMapper.updateByPrimaryKeySelective(stockLogDO);
                     return LocalTransactionState.ROLLBACK_MESSAGE;
                 }
                 return LocalTransactionState.COMMIT_MESSAGE;
@@ -79,7 +88,19 @@ public class MqProducer {
                 Map<String, Object> map = JSON.parseObject(messageExt.getBody().toString(), Map.class);
                 Integer itemId = Integer.parseInt(map.get("itemId").toString());
                 Integer amount = Integer.parseInt(map.get("amount").toString());
-                return null;
+                String stockLogId = map.get("stockLogId").toString();
+                StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+
+                if (stockLogId == null) {
+                    return LocalTransactionState.UNKNOW;
+                }
+
+                if (stockLogDO.getStatus().intValue() == 2) {
+                    return LocalTransactionState.COMMIT_MESSAGE;
+                } else if (stockLogDO.getStatus().intValue() == 1) {
+                    return LocalTransactionState.UNKNOW;
+                }
+                return LocalTransactionState.ROLLBACK_MESSAGE;
             }
         });
     }

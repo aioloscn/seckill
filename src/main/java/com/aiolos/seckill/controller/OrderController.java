@@ -57,8 +57,13 @@ public class OrderController extends BaseController {
 
         UserModel userModel = (UserModel) redisTemplate.opsForValue().get(token);
 
+        // 判断库存是否已售罄
         if (userModel == null) {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN, "用户未登陆，不能下单");
+        }
+
+        if (redisTemplate.hasKey("promo_item_stock_invalid_" + itemId)) {
+            throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }
 
         // 初始化库存流水

@@ -2,8 +2,10 @@ package com.aiolos.seckill.service.impl;
 
 import com.aiolos.seckill.dao.OrderDOMapper;
 import com.aiolos.seckill.dao.SequenceDOMapper;
+import com.aiolos.seckill.dao.StockLogDOMapper;
 import com.aiolos.seckill.dataobject.OrderDO;
 import com.aiolos.seckill.dataobject.SequenceDO;
+import com.aiolos.seckill.dataobject.StockLogDO;
 import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.error.EmBusinessError;
 import com.aiolos.seckill.model.ItemModel;
@@ -17,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,6 +42,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private SequenceDOMapper sequenceDOMapper;
+
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
 
     @Override
     public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException {
@@ -100,7 +103,12 @@ public class OrderServiceImpl implements IOrderService {
         itemService.increaseSales(itemId, amount);
 
         // 6.设置库存流水状态为成功
-
+        StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+        if (stockLogDO == null) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+        stockLogDO.setStatus(2);
+        stockLogDOMapper.updateByPrimaryKeySelective(stockLogDO);
 
 //        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 //

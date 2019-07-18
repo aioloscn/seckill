@@ -15,10 +15,6 @@ import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.service.IPromoService;
 import com.aiolos.seckill.validator.ValidationResult;
 import com.aiolos.seckill.validator.ValidatorImpl;
-import org.apache.rocketmq.client.exception.MQBrokerException;
-import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -139,12 +135,11 @@ public class ItemServiceImpl implements IItemService {
 //        int affectedRow = itemStockDOMapper.decreaseStock(itemId, amount);
         long result = redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount.intValue() * -1);
 
-        if (result >= 0) {
-//            boolean mqResult = mqProducer.asyncReduceStock(itemId, amount);
-//            if (!mqResult) {
-//                redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount.intValue());
-//                return false;
-//            }
+        if (result > 0) {
+            return true;
+        } else if (result == 0) {
+            // 库存售罄
+            redisTemplate.opsForValue().set("promo_item_stock_invalid_" + itemId, "true");
             return true;
         } else {
             return this.increaseStock(itemId, amount);
