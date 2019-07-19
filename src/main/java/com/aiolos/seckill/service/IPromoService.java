@@ -20,4 +20,13 @@ public interface IPromoService {
      * @param promoId
      */
     void publishPromo(Integer promoId);
+
+    /**
+     * 生成秒杀令牌
+     * @param promoId
+     * @param itemId
+     * @param userId
+     * @return
+     */
+    String generateSeckillToken(Integer promoId, Integer itemId, Integer userId);
 }

@@ -10,7 +10,6 @@ import com.aiolos.seckill.error.BusinessException;
 import com.aiolos.seckill.error.EmBusinessError;
 import com.aiolos.seckill.model.ItemModel;
 import com.aiolos.seckill.model.OrderModel;
-import com.aiolos.seckill.model.UserModel;
 import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.service.IOrderService;
 import com.aiolos.seckill.service.IUserService;
@@ -54,23 +53,23 @@ public class OrderServiceImpl implements IOrderService {
         if (itemModel == null)
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "商品信息不存在");
 
-        UserModel userModel = userService.getUserByIdInCache(userId);
-        if (userModel == null)
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户信息不存在");
+//        UserModel userModel = userService.getUserByIdInCache(userId);
+//        if (userModel == null)
+//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户信息不存在");
 
         if (amount <= 0 || amount > 99)
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "数量信息不正确");
 
         // 校验活动信息
-        if (promoId != null) {
-            if (promoId.intValue() != itemModel.getPromoModel().getId()) {
-                // （1）校验对应活动是否存在这个适用商品
-                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "活动信息不正确");
-            } else if (itemModel.getPromoModel().getStatus().intValue() != 2) {
-                // （2）校验活动是否正在进行中
-                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "活动还未开始");
-            }
-        }
+//        if (promoId != null) {
+//            if (promoId.intValue() != itemModel.getPromoModel().getId()) {
+//                // （1）校验对应活动是否存在这个适用商品
+//                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "活动信息不正确");
+//            } else if (itemModel.getPromoModel().getStatus().intValue() != 2) {
+//                // （2）校验活动是否正在进行中
+//                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "活动还未开始");
+//            }
+//        }
 
         // 2.落单减库存
         boolean result = itemService.decreaseStock(itemId, amount);
