@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.*;
 
 /**
  * @author Aiolos
@@ -41,6 +43,13 @@ public class OrderController extends BaseController {
 
     @Autowired
     private IPromoService promoService;
+
+    private ExecutorService executorService;
+
+    @PostConstruct
+    public void init() {
+        executorService = Executors.newFixedThreadPool(20);
+    }
 
     @PostMapping("/createorder")
     public CommonReturnType createOrder(@RequestParam("itemId") Integer itemId,
@@ -72,12 +81,30 @@ public class OrderController extends BaseController {
             }
         }
 
-        // 初始化库存流水
-        String stockLogId = itemService.initStockLog(itemId, amount);
+        // 同步调用线程池的submit方法
+        // 拥塞窗口为20的等待队列，用来队列化泄洪
+        Future<Object> future = executorService.submit(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                // 初始化库存流水
+                String stockLogId = itemService.initStockLog(itemId, amount);
 
 //        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
-        if (!mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount, stockLogId))
-            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR, "下单失败");
+                if (!mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount, stockLogId))
+                    throw new BusinessException(EmBusinessError.UNKNOWN_ERROR, "下单失败");
+
+                return null;
+            }
+        });
+
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        } catch (ExecutionException e) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+
         return CommonReturnType.create(null);
     }
 
