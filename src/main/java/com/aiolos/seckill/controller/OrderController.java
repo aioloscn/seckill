@@ -8,6 +8,7 @@ import com.aiolos.seckill.response.CommonReturnType;
 import com.aiolos.seckill.service.IItemService;
 import com.aiolos.seckill.service.IOrderService;
 import com.aiolos.seckill.service.IPromoService;
+import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,9 +47,13 @@ public class OrderController extends BaseController {
 
     private ExecutorService executorService;
 
+    private RateLimiter createOrderRateLimiter;
+
     @PostConstruct
     public void init() {
         executorService = Executors.newFixedThreadPool(20);
+
+        createOrderRateLimiter = RateLimiter.create(200);
     }
 
     @PostMapping("/createorder")
@@ -56,6 +61,10 @@ public class OrderController extends BaseController {
                                         @RequestParam(value = "promoId", required = false) Integer promoId,
                                         @RequestParam("amount") Integer amount,
                                         @RequestParam("promoToken") String promoToken) throws BusinessException {
+
+        if (!createOrderRateLimiter.tryAcquire()) {
+            throw new BusinessException(EmBusinessError.RATELIMITER);
+        }
 
         String token = httpServletRequest.getParameterMap().get("token")[0];
         if (StringUtils.isEmpty(token)) {
