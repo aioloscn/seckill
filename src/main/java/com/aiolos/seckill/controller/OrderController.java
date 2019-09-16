@@ -81,6 +81,10 @@ public class OrderController extends BaseController {
             }
         }
 
+        if (redisTemplate.hasKey("promo_item_stock_invalid_" + itemId)) {
+            throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
+        }
+
         // 同步调用线程池的submit方法
         // 拥塞窗口为20的等待队列，用来队列化泄洪
         Future<Object> future = executorService.submit(new Callable<Object>() {
